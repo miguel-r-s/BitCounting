@@ -37,14 +37,28 @@ struct BitCounter {
   virtual uint8_t count_bits(uint32_t) = 0;
 };
 
+#define REPEAT4(x) x;x;x;x;
+#define REPEAT2(x) x;x;
+#define REPEAT32(x) REPEAT2(REPEAT4(REPEAT4(x)))
+
 struct NaiveBitCounter : BitCounter {
   
   uint8_t count_bits(uint32_t n) override {
     
     uint8_t counter = 0;
-    for( ; n; n>>=1 )
-      /* Same as if(n&1){++counter;}, but avoids branching */ 
-      counter += (n & 1); 
+    
+    /* While looping through the 32 bits 
+       would achieve the same results, 
+       measurements showed that there 
+       was a significant performance penalty.
+
+       Using gcc flags for loop unrolling 
+       was better, but still not as fast 
+       as simply unrolling the loop manually 
+       with this macro.
+    */
+
+    REPEAT32(counter += (n & 1);n>>=1;);
     
     return counter;
   }
@@ -98,7 +112,7 @@ int main() {
   LookupTableBitCounter lbc;
   SWARBitCounter        sbc;
 
-  const int n_elements = 5E8;
+  const int n_elements = 5E7;
   std::vector<uint32_t> numbers(n_elements);
   
   /* Fill the array with integers from zero to n_elements - 1 */
