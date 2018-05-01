@@ -4,7 +4,7 @@ For the first time, I was bitten by branch-prediction in the Naive implementatio
 
 The first implementation was the following: 
 
-```
+```c
  uint8_t count_bits(uint32_t n) {
          
           uint8_t counter = 0;
@@ -19,7 +19,7 @@ The first implementation was the following:
 This proved to process a sorted array much faster than an unsorted array. A bit of googleing took me to [this](https://stackoverflow.com/questions/11227809/why-is-it-faster-to-process-a-sorted-array-than-an-unsorted-array) SO question where it is determined that branch prediction is the culprit. 
 I tried to fight the faults of branch prediction with the following:
 
- ```
+ ```c
  uint8_t count_bits(uint32_t n) {
          
           uint8_t counter = 0;
@@ -35,7 +35,7 @@ Branch prediction also happens in the ~~~for~~ loop whenever the break condition
 
 The third attempt was:
 
- ```
+ ```c
  uint8_t count_bits(uint32_t n) {
          
           uint8_t counter = 0;
@@ -49,7 +49,7 @@ The third attempt was:
 This successfully eliminates the discrepancies in processing time for sorted/unsorted arrays, at the cost of _worse_ performance for the sorted case. 
 Manually unrolling the loop seemed to work though! 
 
- ```
+ ```c
  uint8_t count_bits(uint32_t n) {
          
           uint8_t counter = 0;
@@ -67,7 +67,7 @@ Using gcc flags for loop unrolling (~~~__attribute__((optimize("unroll-loops")))
 
 Of course, manual unwinding like this is not practical, so my workaround was:
 
-```
+```c
 #define REPEAT4(x) x;x;x;x;
 #define REPEAT2(x) x;x;
 #define REPEAT32(x) REPEAT2(REPEAT4(REPEAT4(x)))
