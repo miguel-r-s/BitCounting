@@ -27,7 +27,7 @@ The first implementation was the following:
  }
 ```
 
-This proved to process a sorted array much faster than an unsorted array. A bit of googleing took me to [this](https://stackoverflow.com/questions/11227809/why-is-it-faster-to-process-a-sorted-array-than-an-unsorted-array) SO question where it is determined that branch prediction is the culprit. 
+This proved to process a sorted array much faster than an unsorted array. A bit of googling took me to [this](https://stackoverflow.com/questions/11227809/why-is-it-faster-to-process-a-sorted-array-than-an-unsorted-array) SO question where it is determined that branch prediction is the culprit. 
 I tried to fight the faults of branch prediction with the following:
 
  ```c
