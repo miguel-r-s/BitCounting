@@ -1,4 +1,15 @@
-Implementation of 3 bitcounting mechanisms for comparison purposes. 
+# Methods
+
+* Naively checking each bit
+* Lookup table for each byte
+* [WAR bit counting](http://webpages.charter.net/tlikens/tech/bitmaps/bit_popcnt.html#divide_and_conquer)
+
+# Comparison
+
+I tested three different bitcounting strategies: a Naive count of each bit, a lookup table for each byte, and SWAR bit counting. 
+The Lookup Table outperformed SWAR bit counting by a small margin, and as expected, the naive bit counting strategy performed significantly worse than the other two. 
+
+# Bitten by my CPU's Branch Prediction
 
 For the first time, I was bitten by branch-prediction in the Naive implementation of a bit counter.
 
@@ -30,8 +41,8 @@ I tried to fight the faults of branch prediction with the following:
  }
 ```
 
-But much to my surprise this didn't solve the discrepancy in processing time for sorted and unsorted arrays of ~~~uint32_t~~~.
-Branch prediction also happens in the ~~~for~~ loop whenever the break condition ~~~n~~~ is evaluated.
+But much to my surprise this didn't solve the discrepancy in processing time for sorted and unsorted arrays of `uint32_t`.
+Branch prediction also happens in the `for` loop whenever the break condition `n` is evaluated.
 
 The third attempt was:
 
@@ -63,7 +74,7 @@ Manually unrolling the loop seemed to work though!
  }
 ```
 
-Using gcc flags for loop unrolling (~~~__attribute__((optimize("unroll-loops")))~~~) helped, but actually performed worse than manually unwinding the loop.
+Using gcc flags for loop unrolling (`__attribute__((optimize("unroll-loops")))`) helped, but actually performed worse than manually unwinding the loop.
 
 Of course, manual unwinding like this is not practical, so my workaround was:
 
@@ -83,4 +94,3 @@ uint8_t count_bits(uint32_t n) {
 ```
 
 Not pretty, but hey, it beats everything else I've tried! 
-
