@@ -112,7 +112,7 @@ int main() {
   LookupTableBitCounter lbc;
   SWARBitCounter        sbc;
 
-  const int n_elements = 5E7;
+  const unsigned long n_elements = 8E8;
   std::vector<uint32_t> numbers(n_elements);
   
   /* Fill the array with integers from zero to n_elements - 1 */
