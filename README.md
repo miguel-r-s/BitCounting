@@ -2,7 +2,7 @@
 
 * Naively checking each bit
 * Lookup table for each byte
-* [WAR bit counting](http://webpages.charter.net/tlikens/tech/bitmaps/bit_popcnt.html#divide_and_conquer)
+* [SWAR bit counting](http://webpages.charter.net/tlikens/tech/bitmaps/bit_popcnt.html#divide_and_conquer)
 
 # Comparison
 
