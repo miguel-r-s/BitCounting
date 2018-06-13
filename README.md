@@ -28,7 +28,17 @@ The first implementation was the following:
 ```
 
 This proved to process a sorted array much faster than an unsorted array. A bit of googling took me to [this](https://stackoverflow.com/questions/11227809/why-is-it-faster-to-process-a-sorted-array-than-an-unsorted-array) SO question where it is determined that branch prediction is the culprit. 
-I tried to fight the faults of branch prediction with the following:
+
+Linux's `perf stat` tool showed indeed a higher percentage of branch-misses in for the unsorted case.
+
+
+| Case          | Branch-miss rate | 
+| ------------- |:----------------:|
+| Sorted array  | 0.01%            |
+| Constant array| 0.07%            |
+| Shuffled array| 0.18%            |
+
+I tried to fight branch misprediction with the following:
 
  ```c
  uint8_t count_bits(uint32_t n) {
@@ -41,8 +51,9 @@ I tried to fight the faults of branch prediction with the following:
  }
 ```
 
-But much to my surprise this didn't solve the discrepancy in processing time for sorted and unsorted arrays of `uint32_t`.
-Branch prediction also happens in the `for` loop whenever the break condition `n` is evaluated.
+
+
+But much to my surprise this didn't solve the discrepancy in processing time for sorted and unsorted arrays of `uint32_t`. `perf stat` yields exactly the same results. In fact, branch prediction also happens in the `for` loop whenever the break condition `n` is evaluated.
 
 The third attempt was:
 
@@ -57,7 +68,14 @@ The third attempt was:
  }
 ```
 
-This successfully eliminates the discrepancies in processing time for sorted/unsorted arrays, at the cost of _worse_ performance for the sorted case. 
+This successfully eliminates the discrepancies in processing time for sorted/unsorted arrays, at the cost of _worse_ performance for the sorted case (in terms of total time, measured locally). 
+
+| Case          | Branch-miss rate | 
+| ------------- |:----------------:|
+| Sorted array  | 0.01%            |
+| Constant array| 0.07%            |
+| Shuffled array| 0.07%            |
+
 Manually unrolling the loop seemed to work though! 
 
  ```c

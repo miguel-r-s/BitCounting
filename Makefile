@@ -2,8 +2,8 @@ CC=g++
 EXE=bitcounting
 FLAGS=-std=c++11 -Wall -O3
 
-default: bitcounting.cpp
-	$(CC) -o $(EXE) bitcounting.cpp $(FLAGS) 
+default: main.cpp 
+	$(CC) -o $(EXE) main.cpp $(FLAGS) 
 
 clean:
 	rm $(EXE)
